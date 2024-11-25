@@ -1,0 +1,8 @@
+../Core/Src/LCD.c:24:6:LCD_init	1
+../Core/Src/LCD.c:87:6:LCD_Clear	1
+../Core/Src/LCD.c:93:6:LCD_Write_Command	1
+../Core/Src/LCD.c:114:6:LCD_Write_Data	1
+../Core/Src/LCD.c:135:7:LCD_Read_State	1
+../Core/Src/LCD.c:142:6:LCD_Set_Position	3
+../Core/Src/LCD.c:157:6:LCD_Display_Char	1
+../Core/Src/LCD.c:163:6:LCD_Display_String	2
