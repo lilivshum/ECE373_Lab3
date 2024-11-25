@@ -1,1 +1,2 @@
-# ECE373_Lab3
+# ECE373_Project 
+Study Helper
