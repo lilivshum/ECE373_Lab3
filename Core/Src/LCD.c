@@ -76,7 +76,7 @@ void LCD_init(void)
 	 LCD_Write_Command(0x01); // display clear
 	 HAL_Delay(1);
 
-	 LCD_Write_Command(0x07); // entry mode set
+	 LCD_Write_Command(0x06); // entry mode set
 	 // HAL_Delay(1);
 	 // turn on display:
 	 LCD_Write_Command(0x0C); // display on ?
