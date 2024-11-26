@@ -101,7 +101,10 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_SET); // Turn the buzzer on
+	  /*HAL_Delay(1000); // Wait for 1 second
+	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_RESET); // Turn the buzzer off
+	  HAL_Delay(1000);*/
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
