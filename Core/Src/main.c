@@ -77,6 +77,15 @@ void inc_time(char* str){
 	}
 }
 
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	if(mode == 't'){
+		mode = 'p';
+	} else {
+		mode = 't';
+	}
+}
+
 /* USER CODE END 0 */
 
 /**
