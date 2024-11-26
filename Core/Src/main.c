@@ -59,18 +59,22 @@ void SystemClock_Config(void);
 int h = 0; // hours
 int m = 0; // minutes
 int s = 0; // seconds
+char mode = 't';// t = timer, p = pause, s = set
 
 void inc_time(char* str){
-	s++;
-	if(s == 60){
-		s = 0;
-		m++;
+	if(mode != 'p'){
+		s++;
+		if(s == 60){
+			s = 0;
+			m++;
+			if(m == 60){
+				m = 0;
+				h = h+1;
+			}
+		}
+
+		int buffer = sprintf(str, "%d : %d : %d", h, m, s);
 	}
-	if(m == 60){
-		m = 0;
-		h = h+1;
-	}
-	int buffer = sprintf(str, "%d : %d : %d", h, m, s);
 }
 
 /* USER CODE END 0 */
@@ -84,6 +88,7 @@ int main(void)
 
   /* USER CODE BEGIN 1 */
 	char string_val [50] = "0:0:0";
+	mode = 't';
 
   /* USER CODE END 1 */
 
@@ -119,15 +124,12 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	  // HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_SET); // Turn the buzzer on
-	  /*HAL_Delay(1000); // Wait for 1 second
-	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_RESET); // Turn the buzzer off
-	  HAL_Delay(1000);*/
-	  LCD_Display_String((uchar)0, (uchar)0, (uchar*)string_val);
-	  HAL_Delay(1000);
-	  inc_time(string_val);
 
     /* USER CODE BEGIN 3 */
+	  LCD_Display_String((uchar)0, (uchar)0, (uchar*)string_val);
+	  HAL_Delay(100);
+	  inc_time(string_val);
+	  LCD_Display_Char((uchar)mode , (uchar)0, (uchar)1);
   }
   /* USER CODE END 3 */
 }

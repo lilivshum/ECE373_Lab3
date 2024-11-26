@@ -21,6 +21,7 @@
 #define LCD_SFT_MOV   0x14
 
 
+
 void LCD_init(void)
 {
 	// Delay_ms(15);

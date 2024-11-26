@@ -75,14 +75,24 @@ void Error_Handler(void);
 #define LCD_DB7_GPIO_Port GPIOA
 #define load_cell_Pin GPIO_PIN_0
 #define load_cell_GPIO_Port GPIOB
+#define mode_set_Pin GPIO_PIN_2
+#define mode_set_GPIO_Port GPIOB
+#define mode_set_EXTI_IRQn EXTI2_IRQn
 #define LCD_RS_Pin GPIO_PIN_12
 #define LCD_RS_GPIO_Port GPIOB
 #define LCD_RW_Pin GPIO_PIN_13
 #define LCD_RW_GPIO_Port GPIOB
 #define LCD_E_Pin GPIO_PIN_14
 #define LCD_E_GPIO_Port GPIOB
+#define inc_Pin GPIO_PIN_3
+#define inc_GPIO_Port GPIOB
+#define inc_EXTI_IRQn EXTI3_IRQn
+#define dec_Pin GPIO_PIN_4
+#define dec_GPIO_Port GPIOB
+#define dec_EXTI_IRQn EXTI4_IRQn
 
 /* USER CODE BEGIN Private defines */
+
 
 /* USER CODE END Private defines */
 
