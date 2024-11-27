@@ -81,6 +81,12 @@ void Error_Handler(void);
 #define LCD_RW_GPIO_Port GPIOB
 #define LCD_E_Pin GPIO_PIN_14
 #define LCD_E_GPIO_Port GPIOB
+#define dec_Pin GPIO_PIN_5
+#define dec_GPIO_Port GPIOB
+#define dec_EXTI_IRQn EXTI9_5_IRQn
+#define inc_Pin GPIO_PIN_6
+#define inc_GPIO_Port GPIOB
+#define inc_EXTI_IRQn EXTI9_5_IRQn
 #define button_Pin GPIO_PIN_7
 #define button_GPIO_Port GPIOB
 #define button_EXTI_IRQn EXTI9_5_IRQn

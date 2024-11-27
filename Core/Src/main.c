@@ -56,33 +56,88 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-int h = 0; // hours
-int m = 0; // minutes
-int s = 0; // seconds
+int h = 0; // timer hours
+int m = 0; // timer minutes
+int s = 10; // timer seconds
+
+// time value for paused time
+int ph = 0;
+int pm = 0;
+int ps = 0;
 char mode = 't';// t = timer, p = pause, s = set
 
-void inc_time(char* str){
-	if(mode != 'p'){
-		s++;
-		if(s == 60){
-			s = 0;
-			m++;
-			if(m == 60){
-				m = 0;
-				h = h+1;
+void inc_time(int* _h, int* _m, int* _s, char* str){
+		*(_s) = *(_s)+1;
+			if(*_s == 60){
+				*_s = 0;
+				*(_m) = *(_m)+1;
+				if(*_m == 60){
+					*_m = 0;
+					*(_h)= *(_h)+1;
+				}
 			}
-		}
 
+			int buffer = sprintf(str, "%d : %d : %d", *_h, *_m,*_s);
+
+}
+
+void inc_pause_time(char* str){
+		inc_time(&ph, &pm, &ps, str);
+}
+
+void dec_timer_time(char* str){
+	if(s > 0 || m  > 0|| h > 0){
+		s--;
+			if(s == -1){
+				m--;
+				s = 59;
+				if(m == -1){
+					h--;
+					m = 59;
+				}
+			}
 		int buffer = sprintf(str, "%d : %d : %d", h, m, s);
 	}
 }
 
+void set_time(int _h, int _m, int _s, char* str){
+	h = _h;
+	m = _m;
+	s = _s;
+	int buffer = sprintf(str, "%d : %d : %d", h, m, s);
+}
+
+void perform_action(char* str){
+	switch (mode){
+		case 'p':
+			inc_pause_time(str);
+			break;
+		case 's':
+			set_time(0, 1, 0, str);
+			break;
+		case 't':
+			dec_timer_time(str);
+			break;
+	}
+}
+
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	if(mode == 't'){
-		mode = 'p';
-	} else {
-		mode = 't';
+	if(GPIO_Pin == button_Pin){
+		if(mode == 't'){ //logic could be improved here but wtv
+				mode = 'p';
+			} else if (mode == 'p'){
+				mode = 't';
+			}
+
+	} else if(GPIO_Pin == inc_Pin){
+		if(mode != 's'){
+			mode = 's';
+		} else {
+			mode = 't';
+		}
+
 	}
 }
 
@@ -96,7 +151,8 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-	char string_val [50] = "0:0:0";
+	char string_val [50];
+	int buffer = sprintf(string_val, "%d : %d : %d", h, m, s);
 	mode = 't';
 
   /* USER CODE END 1 */
@@ -135,10 +191,12 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  //perform_action(string_val);
 	  LCD_Display_String((uchar)0, (uchar)0, (uchar*)string_val);
-	  HAL_Delay(100);
-	  inc_time(string_val);
 	  LCD_Display_Char((uchar)mode , (uchar)0, (uchar)1);
+	  HAL_Delay(500);
+	  perform_action(string_val);
+	  LCD_Clear();
   }
   /* USER CODE END 3 */
 }
