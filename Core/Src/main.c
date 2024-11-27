@@ -64,20 +64,23 @@ int s = 10; // timer seconds
 int ph = 0;
 int pm = 0;
 int ps = 0;
+
+int paused_buffer = 0;
+
 char mode = 't';// t = timer, p = pause, s = set
 
 void inc_time(int* _h, int* _m, int* _s, char* str){
-		*(_s) = *(_s)+1;
-			if(*_s == 60){
-				*_s = 0;
-				*(_m) = *(_m)+1;
-				if(*_m == 60){
-					*_m = 0;
-					*(_h)= *(_h)+1;
-				}
+	*(_s) = *(_s)+1;
+		if(*_s == 60){
+			*_s = 0;
+			*(_m) = *(_m)+1;
+			if(*_m == 60){
+				*_m = 0;
+				*(_h)= *(_h)+1;
 			}
+		}
 
-			int buffer = sprintf(str, "%d : %d : %d", *_h, *_m,*_s);
+	int buffer = sprintf(str, "%d : %d : %d", *_h, *_m,*_s);
 
 }
 
@@ -111,13 +114,19 @@ void perform_action(char* str){
 	switch (mode){
 		case 'p':
 			inc_pause_time(str);
+			paused_buffer++;
 			break;
 		case 's':
 			set_time(0, 1, 0, str);
 			break;
 		case 't':
+			paused_buffer = 0;
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_RESET);
 			dec_timer_time(str);
 			break;
+	}
+	if(paused_buffer >= 10){
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_SET);
 	}
 }
 

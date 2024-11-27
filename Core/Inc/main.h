@@ -75,6 +75,8 @@ void Error_Handler(void);
 #define LCD_DB7_GPIO_Port GPIOA
 #define load_cell_Pin GPIO_PIN_0
 #define load_cell_GPIO_Port GPIOB
+#define buzzer_Pin GPIO_PIN_10
+#define buzzer_GPIO_Port GPIOB
 #define LCD_RS_Pin GPIO_PIN_12
 #define LCD_RS_GPIO_Port GPIOB
 #define LCD_RW_Pin GPIO_PIN_13
