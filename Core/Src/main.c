@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
+#include "tim.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -58,7 +59,7 @@ void SystemClock_Config(void);
 
 int h = 0; // timer hours
 int m = 0; // timer minutes
-int s = 10; // timer seconds
+int s = 15; // timer seconds
 
 // time value for paused time
 int ph = 0;
@@ -67,7 +68,14 @@ int ps = 0;
 
 int paused_buffer = 0;
 
-char mode = 't';// t = timer, p = pause, s = set
+char string_val [50];
+
+char mode;// t = timer, p = pause, s = set
+
+void make_00(int num, char* str){
+
+
+}
 
 void inc_time(int* _h, int* _m, int* _s, char* str){
 	*(_s) = *(_s)+1;
@@ -80,7 +88,7 @@ void inc_time(int* _h, int* _m, int* _s, char* str){
 			}
 		}
 
-	int buffer = sprintf(str, "%d : %d : %d", *_h, *_m,*_s);
+	int buffer = sprintf(str, "%2d : %2d : %2d", *_h, *_m,*_s);
 
 }
 
@@ -99,8 +107,8 @@ void dec_timer_time(char* str){
 					m = 59;
 				}
 			}
-		int buffer = sprintf(str, "%d : %d : %d", h, m, s);
 	}
+	int buffer = sprintf(str, "%2d : %2d : %2d", h, m, s);
 }
 
 void set_time(int _h, int _m, int _s, char* str){
@@ -125,9 +133,6 @@ void perform_action(char* str){
 			dec_timer_time(str);
 			break;
 	}
-	if(paused_buffer >= 10){
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_SET);
-	}
 }
 
 
@@ -150,6 +155,22 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	}
 }
 
+void Display(){
+	// LCD_Clear();
+	LCD_Display_String((uchar)0, (uchar)0, (uchar*)string_val);
+	LCD_Display_Char((uchar)mode , (uchar)0, (uchar)1);
+}
+
+// timer interrupt handler function
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
+	if(htim == &htim2){
+		perform_action(string_val);
+	}
+	if(htim == &htim3){
+
+	}
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -160,7 +181,6 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-	char string_val [50];
 	int buffer = sprintf(string_val, "%d : %d : %d", h, m, s);
 	mode = 't';
 
@@ -185,10 +205,14 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_ADC1_Init();
+  MX_TIM2_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
 
   LCD_init();
   LCD_Clear();
+  HAL_TIM_Base_Start_IT(&htim2);
+  HAL_TIM_Base_Start_IT(&htim3);
   // LCD_Write_Data(64);
 
   /* USER CODE END 2 */
@@ -198,14 +222,9 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+	  Display();
 
     /* USER CODE BEGIN 3 */
-	  //perform_action(string_val);
-	  LCD_Display_String((uchar)0, (uchar)0, (uchar*)string_val);
-	  LCD_Display_Char((uchar)mode , (uchar)0, (uchar)1);
-	  HAL_Delay(500);
-	  perform_action(string_val);
-	  LCD_Clear();
   }
   /* USER CODE END 3 */
 }
