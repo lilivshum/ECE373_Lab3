@@ -70,12 +70,29 @@ int paused_buffer = 0;
 
 char string_val [50];
 
+char string_lc [5];
+
 char mode;// t = timer, p = pause, s = set
 
 void make_00(int num, char* str){
 
 
 }
+
+uint32_t ADC_OBTAIN_VAL(char* str){
+	HAL_ADC_Start(&hadc1);
+	HAL_ADC_PollForConversion(&hadc1, 1000);
+	uint32_t val = HAL_ADC_GetValue(&hadc1);
+	// uint32_t voltage = ((val)/4096.0)*3.3;
+	// int frac = (int)((voltage - (int)voltage)*100);
+
+
+	sprintf(str,"%4d",(int)val);
+	        //HAL_Delay(500);
+	HAL_ADC_Stop(&hadc1);
+	return val;
+}
+
 
 void inc_time(int* _h, int* _m, int* _s, char* str){
 	*(_s) = *(_s)+1;
@@ -139,11 +156,12 @@ void perform_action(char* str){
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	if(GPIO_Pin == button_Pin){
-		if(mode == 't'){ //logic could be improved here but wtv
-				mode = 'p';
-			} else if (mode == 'p'){
-				mode = 't';
-			}
+//		if(mode == 's'){ //logic could be improved here but wtv
+//				mode = 'p';
+//			} else if (mode == 'p'){
+//				mode = 't';
+//			}
+		mode = 's';
 
 	} else if(GPIO_Pin == inc_Pin){
 		if(mode != 's'){
@@ -159,6 +177,7 @@ void Display(){
 	// LCD_Clear();
 	LCD_Display_String((uchar)0, (uchar)0, (uchar*)string_val);
 	LCD_Display_Char((uchar)mode , (uchar)0, (uchar)1);
+	LCD_Display_String((uchar)2, (uchar)1, (uchar*)string_lc);
 }
 
 // timer interrupt handler function
@@ -167,6 +186,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 		perform_action(string_val);
 	}
 	if(htim == &htim3){
+		uint32_t val = ADC_OBTAIN_VAL(string_lc);
+		if(val > 100){
+			mode = 'p';
+			// HAL_Delay(50);
+		} else {
+			mode = 't';
+		}
 
 	}
 }
