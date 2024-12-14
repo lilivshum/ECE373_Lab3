@@ -83,6 +83,10 @@ void Error_Handler(void);
 #define LCD_RW_GPIO_Port GPIOB
 #define LCD_E_Pin GPIO_PIN_14
 #define LCD_E_GPIO_Port GPIOB
+#define buzzerA11_Pin GPIO_PIN_11
+#define buzzerA11_GPIO_Port GPIOA
+#define move_set_Pin GPIO_PIN_4
+#define move_set_GPIO_Port GPIOB
 #define dec_Pin GPIO_PIN_5
 #define dec_GPIO_Port GPIOB
 #define dec_EXTI_IRQn EXTI9_5_IRQn

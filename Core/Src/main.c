@@ -74,6 +74,8 @@ char string_lc [5];
 
 char mode;// t = timer, p = pause, s = set
 
+int buzz = 0; // tells the buzzer to buzz
+
 void make_00(int num, char* str){
 
 
@@ -140,15 +142,24 @@ void perform_action(char* str){
 		case 'p':
 			inc_pause_time(str);
 			paused_buffer++;
+//			if(paused_buffer >= 5){
+//				// HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_SET);
+//				buzz = 1;
+//			}
 			break;
 		case 's':
-			set_time(0, 1, 0, str);
+			// set_time(0, 1, 0, str);
+			str = "Hello";
 			break;
 		case 't':
 			paused_buffer = 0;
-			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_RESET);
 			dec_timer_time(str);
 			break;
+	}
+	if(paused_buffer > 5){
+		buzz = 1;
+	} else {
+		buzz = 0;
 	}
 }
 
@@ -156,19 +167,19 @@ void perform_action(char* str){
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	if(GPIO_Pin == button_Pin){
-//		if(mode == 's'){ //logic could be improved here but wtv
-//				mode = 'p';
-//			} else if (mode == 'p'){
-//				mode = 't';
-//			}
-		mode = 's';
+		if(mode == 's'){ //logic could be improved here but wtv
+			mode = 't';
+			// HAL_Delay(5);
+		} else if (mode == 't'){
+			mode = 's';
+			// HAL_Delay(5);
+		}
 
 	} else if(GPIO_Pin == inc_Pin){
-		if(mode != 's'){
-			mode = 's';
-		} else {
-			mode = 't';
+		if(mode == 's'){
+
 		}
+
 
 	}
 }
@@ -187,13 +198,17 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	}
 	if(htim == &htim3){
 		uint32_t val = ADC_OBTAIN_VAL(string_lc);
-		if(val > 100){
+		if(val > 200){
 			mode = 'p';
 			// HAL_Delay(50);
-		} else {
+		} else if(mode != 's') {
 			mode = 't';
 		}
-
+	}
+	if(buzz){
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_SET);
+	} else {
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_RESET);
 	}
 }
 
@@ -248,9 +263,10 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	  Display();
 
     /* USER CODE BEGIN 3 */
+	  Display();
+	  HAL_Delay(300);
   }
   /* USER CODE END 3 */
 }
