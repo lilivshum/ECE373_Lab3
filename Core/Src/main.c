@@ -76,6 +76,10 @@ char mode;// t = timer, p = pause, s = set
 
 int buzz = 0; // tells the buzzer to buzz
 
+char mode_set = 's';
+
+int button_val = 0;
+
 void make_00(int num, char* str){
 
 
@@ -130,11 +134,39 @@ void dec_timer_time(char* str){
 	int buffer = sprintf(str, "%2d : %2d : %2d", h, m, s);
 }
 
+void set_menu(char* str){
+	switch(mode_set){
+		case 's':
+			s = button_val;
+			break;
+		case 'm':
+			m = button_val;
+			break;
+		case 'h':
+			h = button_val;
+			break;
+	}
+	int buffer = sprintf(str, "%2d : %2d : %2d", h, m, s);
+}
+
+void set_move(char* str){
+	button_val = 0;
+	if(mode_set == 's'){
+		mode_set = 'm';
+	} else if(mode_set == 'm'){
+		mode_set = 'h';
+	} else if(mode_set == 'h'){
+		mode_set = 's';
+	}
+	set_menu(string_val);
+	//HAL_Delay(5);
+}
+
 void set_time(int _h, int _m, int _s, char* str){
 	h = _h;
 	m = _m;
 	s = _s;
-	int buffer = sprintf(str, "%d : %d : %d", h, m, s);
+	int buffer = sprintf(str, "%2d : %2d : %2d", h, m, s);
 }
 
 void perform_action(char* str){
@@ -148,8 +180,8 @@ void perform_action(char* str){
 //			}
 			break;
 		case 's':
-			// set_time(0, 1, 0, str);
-			str = "Hello";
+			//set_time(0, 0, 0, str);
+			//set_menu(str);
 			break;
 		case 't':
 			paused_buffer = 0;
@@ -171,16 +203,27 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			mode = 't';
 			// HAL_Delay(5);
 		} else if (mode == 't'){
+			set_time(50, 50, 50, string_val);
 			mode = 's';
 			// HAL_Delay(5);
 		}
 
 	} else if(GPIO_Pin == inc_Pin){
 		if(mode == 's'){
-
+			button_val = (button_val+1) % 60;
+			set_menu(string_val);
 		}
 
 
+	} else if(GPIO_Pin == dec_Pin){
+		if(mode == 's'){
+			button_val = (button_val+59)%60;
+			set_menu(string_val);
+		}
+	} else if(GPIO_Pin == move_Pin){
+		if(mode == 's'){
+			set_move(string_val);
+		}
 	}
 }
 

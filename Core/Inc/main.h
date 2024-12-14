@@ -85,8 +85,6 @@ void Error_Handler(void);
 #define LCD_E_GPIO_Port GPIOB
 #define buzzerA11_Pin GPIO_PIN_11
 #define buzzerA11_GPIO_Port GPIOA
-#define move_set_Pin GPIO_PIN_4
-#define move_set_GPIO_Port GPIOB
 #define dec_Pin GPIO_PIN_5
 #define dec_GPIO_Port GPIOB
 #define dec_EXTI_IRQn EXTI9_5_IRQn
@@ -96,6 +94,9 @@ void Error_Handler(void);
 #define button_Pin GPIO_PIN_7
 #define button_GPIO_Port GPIOB
 #define button_EXTI_IRQn EXTI9_5_IRQn
+#define move_Pin GPIO_PIN_9
+#define move_GPIO_Port GPIOB
+#define move_EXTI_IRQn EXTI9_5_IRQn
 
 /* USER CODE BEGIN Private defines */
 

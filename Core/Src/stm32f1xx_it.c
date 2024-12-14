@@ -225,6 +225,7 @@ void EXTI9_5_IRQHandler(void)
   HAL_GPIO_EXTI_IRQHandler(dec_Pin);
   HAL_GPIO_EXTI_IRQHandler(inc_Pin);
   HAL_GPIO_EXTI_IRQHandler(button_Pin);
+  HAL_GPIO_EXTI_IRQHandler(move_Pin);
   /* USER CODE BEGIN EXTI9_5_IRQn 1 */
 
   /* USER CODE END EXTI9_5_IRQn 1 */
